@@ -1,114 +1,91 @@
-# Program
-from program_functions import *
+from classes import *
 from UI import *
-from tests import *
 
 
-def command_valid(comm):
-    if comm >= 0 and comm <= 15:
+def is_int(user_input):
+    try:
+        int(user_input)
+        is_int = True
+    except ValueError:
+        is_int = False
+
+
+def check_command(comm):
+    if comm >= 0 and comm:
         return True
     return False
 
 
-def main_program():
-    commands()
-    comm = int(input("Your command : "))
-    global score_list, last_score_list
-    print()
-    #score_list = [0, 1, 2 , 3 , 4 , 5, 6, 7 ,8, 9]
+def main():
 
-    if command_valid(comm) == False:
-        print("Command does not exist! Please enter a valid one.")
+    vectors = VectorRepository()
 
-    if comm == 0:
-        quit()
+    while True:
 
-    elif comm == 1:
-        value = int(input("Value to add: "))
-        score_list = add_number(score_list, value)
-
-    elif comm == 2:
-        index = int(input("Index: "))
-        value = int(input("Value to add: "))
-        score_list = insert_number(score_list, index, value)
-
-    elif comm == 3:
-        index = int(input("Index: "))
-        score_list = remove_index(score_list, index)
-
-    elif comm == 4:
-        from_index = int(input("Start index: "))
-        to_index = int(input("Stop index: "))
-        score_list = remove_between(score_list, from_index, to_index)
-
-    elif comm == 5:
-        index = int(input("Index: "))
-        new_value = int(input("New value: "))
-        score_list = replace(score_list, index, new_value)
-
-    elif comm == 6:
-        value = int(input("Comparison value: "))
-        print("Participants with score less than value are :",
-              less(score_list, value))
+        commands()
+        comm = int(input("Your command: "))
         print()
 
-    elif comm == 7:
+        if comm == 0:
+            quit()
+
+        if comm == 1:
+            # taking all inputs and checking if the data types are correct
+            nameId = input("Name id: ")
+            colour = input("Colour: ")
+            typeInteger = int(input("Integer type(positive integer): "))
+            is_int(typeInteger)
+
+            if typeInteger < 0:
+                print("Please input a positive integer greater or equal to 1 ")
+                continue
+
+            count = int(
+                input("Enter the total count of elements in the vector: "))
+            is_int(count)
+            vector_elements = []
+            for i in range(0, count):
+                number = int(input())
+                is_int(number)
+                vector_elements.append(number)
+
+            vectors.add_a_vector_to_the_repository(
+                MyVector(nameId, colour, typeInteger, vector_elements))
+
+        if comm == 2:
+            # function 11
+            sum = int(input("Sum searched:"))
+            print()
+            print(f"The vectors with sum of elements = {sum} have the id's:")
+            list = vectors.get_vectors_having_sum(sum)
+
+        if comm == 3:
+            # function 19 --- used numpy to delete array
+            index1 = int(input("Index 1:"))
+            index2 = int(input("Index 2:"))
+            vectors.delete_vectors_between(index1, index2)
+
+        if comm == 4:
+            # function 22
+            # Update the color of a vector identified by name_id.
+            id = input("Id to updated:")
+            colour = input("New colour:")
+            vectors.update_color_by_name_id(id, colour)
+
+        if comm == 5:
+            vectors.add_4_data_example()
+
+        if comm == 6:
+            list = vectors.get_all_vectors()
+            print("The vectors are:")
+            for item in range(len(list)):
+                print(list[item].__str__())
+
+        if comm == 7:
+            index = int(input("Index: "))
+            vectors.get_vector_at_given_index(index)
+
         print()
-        print("Participants sorted :", sorted_by_score(score_list))
-        print()
-
-    elif comm == 8:
-        value = int(input("Comparison value: "))
-        print()
-        print("Participants with score higher than value are :",
-              sorted_higher(score_list, value))
-        print()
-
-    elif comm == 9:
-        from_index = int(input("Start index: "))
-        to_index = int(input("Stop index: "))
-        print()
-        print("Average is: ")
-        print(avg(score_list, from_index, to_index))
-        print()
-
-    elif comm == 10:
-        from_index = int(input("Start index: "))
-        to_index = int(input("Stop index: "))
-        print()
-        print("Minimum is: ", minimum_between(
-            score_list, from_index, to_index))
-        print()
-
-    elif comm == 11:
-        value = int(input("Comparison value: "))
-        from_index = int(input("Start index: "))
-        to_index = int(input("Stop index: "))
-        print()
-        print("Scores are: ", mul(score_list, value, from_index, to_index))
-        print()
-
-    elif comm == 12:
-        value = int(input("Comparison value: "))
-        score_list = filter_mul(score_list, value)
-
-    elif comm == 13:
-        value = int(input("Comparison value: "))
-        score_list = filter_greater(score_list, value)
-
-    elif comm == 14:
-        score_list = undo()
-
-    elif comm == 15:
-        run_tests()
-
-    print("Current list: ")
-    print(score_list)
-    main_program()
 
 
-global score_list, last_score_list
-# we will have the following list as default
-score_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-last_score_list = score_list.copy()
-main_program()
+main()
